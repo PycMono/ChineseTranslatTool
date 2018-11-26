@@ -109,7 +109,7 @@ func (this *ExcelUtil) Replace(resultDict map[string]string, tarFilePath string)
 // 参数：
 // word：待判断的单词
 // 返回值：
-// 1.ture：表示中文，反之不是
+// 1.ture：表示中文，false：非中文
 func (this *ExcelUtil) isChinese(word string) bool {
 	for _, r := range word {
 		if unicode.Is(unicode.Scripts["Han"], r) || (regexp.MustCompile("^[\u4e00-\u9fa5]{3,8}$").MatchString(string(r))) {
