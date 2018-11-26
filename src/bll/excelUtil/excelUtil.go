@@ -83,8 +83,8 @@ func (this *ExcelUtil) Replace(resultDict map[string]string, tarFilePath string)
 					continue
 				}
 
-				value, ok := resultDict[text]
-				if !ok {
+				value, exists := resultDict[text]
+				if !exists {
 					warnInfo := fmt.Sprintf("resultDict不存在key=------%s------的日文翻译sheet.Name=%s,row=%d", text, sheet.Name, index)
 					resultList = append(resultList, warnInfo)
 					continue

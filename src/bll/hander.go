@@ -32,7 +32,7 @@ func TranslateWord() error {
 		return err
 	}
 
-	tempList := make([]string, 0)
+	notInExcelList := make([]string, 0)
 	// 遍历文件处理
 	for _, filePath := range filePathList {
 		tempExcelUtil, err := excelUtil.NewExcelUtil(filePath)
@@ -40,17 +40,17 @@ func TranslateWord() error {
 			fmt.Println(err)
 			continue
 		} else {
-			results, err := tempExcelUtil.Replace(worldDict, baseConfig.TarFilePath)
+			resultList, err := tempExcelUtil.Replace(worldDict, baseConfig.TarFilePath)
 			if err != nil {
 				fmt.Println(err)
 				continue
 			}
 
-			tempList = append(tempList, results...)
+			notInExcelList = append(notInExcelList, resultList...)
 		}
 	}
 
-	for _, item := range tempList {
+	for _, item := range notInExcelList {
 		fmt.Println(item)
 		logUtil.ErrorLog(item)
 	}
