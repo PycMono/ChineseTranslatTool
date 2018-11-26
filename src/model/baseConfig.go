@@ -81,12 +81,13 @@ func initBaseConfig(config *configUtil.XmlConfig) error {
 			continue
 		}
 
-		s = fmt.Sprintf("%s,%s", s, table)
+		s = fmt.Sprintf("%s;%s", s, table)
 	}
 
-	fmt.Println(len(notTableDict))
+	fmt.Println(fmt.Sprintf("不翻译的表长度为：%d", len(notTableDict)))
 	logUtil.DebugLog(fmt.Sprintf("不翻译的表名为：%s", s))
-	fmt.Sprint(fmt.Sprintf("不翻译的表名为：%s", s))
+	fmt.Println(fmt.Sprintf("不翻译的表名为：%s", s))
+	fmt.Println("------------------------------------------------")
 
 	baseConfig = &BaseConfig{
 		SourceFilePath:    sourceFilePath,
