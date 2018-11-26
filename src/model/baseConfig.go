@@ -1,10 +1,10 @@
 package config
 
 import (
+	"fmt"
 	"moqikaka.com/goutil/configUtil"
 	"moqikaka.com/goutil/debugUtil"
 	"moqikaka.com/goutil/logUtil"
-	"fmt"
 	"strings"
 )
 
@@ -34,8 +34,8 @@ func init() {
 	configObj := configUtil.NewXmlConfig()
 	err := configObj.LoadFromFile("config.xml")
 	if err != nil {
-		fmt.Println(fmt.Sprintf("初始化NewXmlConfig报错%s",err))
-		logUtil.ErrorLog(fmt.Sprintf("初始化NewXmlConfig报错%s",err))
+		fmt.Println(fmt.Sprintf("初始化NewXmlConfig报错%s", err))
+		logUtil.ErrorLog(fmt.Sprintf("初始化NewXmlConfig报错%s", err))
 		return
 	}
 
@@ -64,20 +64,35 @@ func initBaseConfig(config *configUtil.XmlConfig) error {
 	}
 
 	notTable, err := config.String("root/BaseConfig/NotTable", "")
+	// 去除空格,制表符，换行符号，防止切割后，出现乱七八糟的问题，导致查询时候数据不在字典里面
+	notTable = strings.Replace(notTable, "\r", "", -1)
+	notTable = strings.Replace(notTable, "\t", "", -1)
+	notTable = strings.Replace(notTable, "\n", "", -1)
 	if err != nil {
 		return err
 	}
 
 	notTableDict := make(map[string]string)
+	var s string
 	for _, table := range strings.Split(notTable, ";") {
-		notTableDict[table]=table
+		notTableDict[table] = table
+		if s == "" {
+			s = table
+			continue
+		}
+
+		s = fmt.Sprintf("%s,%s", s, table)
 	}
 
+	fmt.Println(len(notTableDict))
+	logUtil.DebugLog(fmt.Sprintf("不翻译的表名为：%s", s))
+	fmt.Sprint(fmt.Sprintf("不翻译的表名为：%s", s))
+
 	baseConfig = &BaseConfig{
-		SourceFilePath:               sourceFilePath,
-		TarFilePath:              tarFilePath,
-		TranslateFileName:translateFileName,
-		NotTableDict:notTableDict,
+		SourceFilePath:    sourceFilePath,
+		TarFilePath:       tarFilePath,
+		TranslateFileName: translateFileName,
+		NotTableDict:      notTableDict,
 	}
 
 	debugUtil.Println("BaseConfig:", baseConfig)

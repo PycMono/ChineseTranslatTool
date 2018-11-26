@@ -14,6 +14,7 @@ import (
 	"github.com/tealeg/xlsx"
 	"moqikaka.com/ChineseTranslatTool/src/model"
 	"moqikaka.com/Test/src/BLL/fileUtil"
+	"moqikaka.com/goutil/logUtil"
 	"os"
 )
 
@@ -68,8 +69,19 @@ func (this *ExcelUtil) Replace(resultDict map[string]string, tarFilePath string)
 	baseConfig := config.GetBaseConfig()
 	for _, sheet := range this.file.Sheets {
 		// 判断当前表是否不翻译
-		if _, ok := baseConfig.NotTableDict[sheet.Name]; ok {
+		if _, exists := baseConfig.NotTableDict[sheet.Name]; exists {
 			continue
+		}
+
+		if sheet.Name == "b_goods_special_enum" {
+			if _, exists := baseConfig.NotTableDict[sheet.Name]; !exists {
+				for key, value := range baseConfig.NotTableDict {
+					logUtil.DebugLog(fmt.Sprintf("字典的key：--%s--，value：--%s--", key, value))
+				}
+
+				logUtil.DebugLog(fmt.Sprintf("长度--%d--", len(baseConfig.NotTableDict)))
+				logUtil.DebugLog(fmt.Sprintf("居然不存在--%s--", sheet.Name))
+			}
 		}
 
 		for index, row := range sheet.Rows {
