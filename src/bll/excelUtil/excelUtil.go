@@ -54,7 +54,7 @@ func (this *ExcelUtil) ReadExcelToDict() map[string]string {
 // 替换字符串
 // 参数：
 // resultDict：译文
-// tarFilePath保存到目标文件
+// tarFilePath：保存到目标文件
 // 返回值：
 // 1.错误对象
 func (this *ExcelUtil) Replace(resultDict map[string]string, tarFilePath string) ([]string, error) {
